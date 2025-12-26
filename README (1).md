@@ -23,11 +23,11 @@ Project này cung cấp một pipeline hoàn chỉnh để fine-tune các transf
 
 ## 🎯 Objectives
 
-| Metric   | Baseline | Good     | Excellent |
-|----------|----------|----------|-----------|
-| ROUGE-1  | 0.35     | 0.40-0.43| 0.45+     |
-| ROUGE-2  | 0.15     | 0.18-0.22| 0.25+     |
-| ROUGE-L  | 0.30     | 0.35-0.38| 0.40+     |
+| Metric  | Baseline | Good      | Excellent |
+| ------- | -------- | --------- | --------- |
+| ROUGE-1 | 0.35     | 0.40-0.43 | 0.45+     |
+| ROUGE-2 | 0.15     | 0.18-0.22 | 0.25+     |
+| ROUGE-L | 0.30     | 0.35-0.38 | 0.40+     |
 
 ## 📁 Project Structure
 
@@ -113,6 +113,7 @@ jupyter notebook vietnamese_summarization.ipynb
 - **Size**: ~50K training samples (varies)
 
 **Dataset Statistics:**
+
 - Average article length: ~800 words
 - Average summary length: ~80 words
 - Compression ratio: ~10%
@@ -130,6 +131,7 @@ jupyter notebook vietnamese_summarization.ipynb
 **Model**: `vinai/phobert-base`
 
 **Approach**: Sentence extraction
+
 - Scores sentences by importance
 - Selects top-k sentences
 - No new text generation
@@ -146,6 +148,7 @@ jupyter notebook vietnamese_summarization.ipynb
 **Model**: `google/mt5-base`
 
 **Approach**: Seq2seq generation
+
 - Multilingual T5 model
 - Encoder-decoder architecture
 - Generates new summaries
@@ -162,6 +165,7 @@ jupyter notebook vietnamese_summarization.ipynb
 **Model**: `VietAI/vit5-base`
 
 **Approach**: Seq2seq generation
+
 - Vietnamese-optimized T5
 - Pre-trained on Vietnamese corpus
 - Best performance cho Vietnamese
@@ -198,11 +202,11 @@ SAVE_STEPS = 500
 
 ### Hardware Requirements
 
-| Setup          | GPU       | VRAM  | Batch Size | Time (10K samples) |
-|----------------|-----------|-------|------------|--------------------|
-| **Minimum**    | T4        | 16GB  | 2          | ~4 hours           |
-| **Recommended**| P100      | 16GB  | 4-8        | ~2 hours           |
-| **Optimal**    | V100      | 32GB  | 16         | ~1 hour            |
+| Setup           | GPU  | VRAM | Batch Size | Time (10K samples) |
+| --------------- | ---- | ---- | ---------- | ------------------ |
+| **Minimum**     | T4   | 16GB | 2          | ~4 hours           |
+| **Recommended** | P100 | 16GB | 4-8        | ~2 hours           |
+| **Optimal**     | V100 | 32GB | 16         | ~1 hour            |
 
 ## 📈 Evaluation
 
@@ -245,24 +249,27 @@ comparator.statistical_test('ViT5', 'mT5')
 
 ### Benchmark Results (VLSP 2021 Test Set)
 
-| Model         | ROUGE-1 | ROUGE-2 | ROUGE-L | Training Time |
-|---------------|---------|---------|---------|---------------|
-| PhoBERT-base  | 0.354   | 0.151   | 0.302   | ~4 hours      |
-| mT5-base      | 0.421   | 0.198   | 0.365   | ~8 hours      |
-| **ViT5-base** | **0.448**| **0.227**| **0.391**| ~8 hours     |
-| ViT5-large    | 0.472   | 0.251   | 0.417   | ~16 hours     |
+| Model         | ROUGE-1   | ROUGE-2   | ROUGE-L   | Training Time |
+| ------------- | --------- | --------- | --------- | ------------- |
+| PhoBERT-base  | 0.354     | 0.151     | 0.302     | ~4 hours      |
+| mT5-base      | 0.421     | 0.198     | 0.365     | ~8 hours      |
+| **ViT5-base** | **0.448** | **0.227** | **0.391** | ~8 hours      |
+| ViT5-large    | 0.472     | 0.251     | 0.417     | ~16 hours     |
 
-*Results on VLSP 2021 test set with Kaggle T4 GPU*
+_Results on VLSP 2021 test set with Kaggle T4 GPU_
 
 ### Sample Outputs
 
 **Input Article (truncated):**
+
 > Hôm nay, Bộ Y tế công bố thêm 15.527 ca nhiễm COVID-19 mới, nâng tổng số ca nhiễm tại Việt Nam lên 895.326 ca. TP.HCM tiếp tục dẫn đầu với 6.784 ca...
 
 **Reference Summary:**
+
 > Bộ Y tế công bố 15.527 ca COVID-19 mới, TP.HCM dẫn đầu với 6.784 ca.
 
 **ViT5 Generated:**
+
 > Bộ Y tế ghi nhận 15.527 ca nhiễm COVID-19 mới trong ngày, nâng tổng số ca lên 895.326. TP.HCM có nhiều ca nhất với 6.784 ca.
 
 **ROUGE Scores:** R1: 0.512, R2: 0.287, RL: 0.455
@@ -293,11 +300,11 @@ import optuna
 def objective(trial):
     lr = trial.suggest_float('lr', 1e-5, 1e-4, log=True)
     batch_size = trial.suggest_categorical('batch_size', [4, 8, 16])
-    
+
     # Train with these hyperparameters
     trainer = SummarizationTrainer(...)
     trainer.train(...)
-    
+
     return validation_rouge1
 
 study = optuna.create_study(direction='maximize')
